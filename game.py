@@ -1,6 +1,5 @@
 import arcade
 import arcade.key
-import arcade.key
 
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 600
@@ -15,6 +14,10 @@ class Bar(arcade.Sprite):
 
     def update(self):
         self.center_x += self.change_x
+        if self.right >= SCREEN_WIDTH:
+            self.right = SCREEN_WIDTH
+        if self.left <= 0:
+            self.left = 0 
 
 
 class Ball(arcade.Sprite):
@@ -57,16 +60,21 @@ class Game(arcade.Window):
         self.ball.draw()
 
     def update(self, delta_time: float):
+        if arcade.check_for_collision(self.ball, self.bar):
+            self.ball.change_y = -self.ball.change_y
+
         self.ball.update()
         self.bar.update()
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.RIGHT:
-            self.bar.change_x = 2
+            self.bar.change_x = 3
         if symbol == arcade.key.LEFT:
-            self.bar.change_x = -2
+            self.bar.change_x = -3
     
-    def
+    def on_key_release(self, symbol: int, modifiers: int):
+        if symbol == arcade.key.RIGHT or arcade.key.LEFT:
+            self.bar.change_x = 0
 
 if __name__ == '__main__':
     window = Game(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
